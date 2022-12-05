@@ -1,0 +1,17 @@
+{
+  "name": "film-blockchain",
+  "version": "0.0.1",
+  "description": "Blockchain service",
+  "main": "test.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "author": "administrator",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "fs": "0.0.1-security",
+    "solc": "^0.8.17",
+    "web3": "^1.8.1"
+  }
+}
