@@ -258,11 +258,6 @@
 				"type": "address"
 			},
 			{
-				"internalType": "address",
-				"name": "buyer",
-				"type": "address"
-			},
-			{
 				"internalType": "string",
 				"name": "cluster",
 				"type": "string"
@@ -304,11 +299,6 @@
 			{
 				"internalType": "address",
 				"name": "film",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "buyer",
 				"type": "address"
 			},
 			{

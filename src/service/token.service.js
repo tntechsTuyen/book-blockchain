@@ -17,7 +17,7 @@ const VND = {
 var web3 = new Web3(process.env.WEB3_RPC); //Change to correct network
 var contract = new web3.eth.Contract(VND.abi, process.env.CONTRACT_ADDRESS, {from: process.env.OWNER_ADDRESS, gas: 3000000});
 web3.eth.accounts.wallet.add(process.env.OWNER_PRIVATE_KEY);
-web3.eth.defaultAccount = process.env.OWNER_ADDRESS;
+web3.eth.defaultAccount = web3.eth.accounts.wallet[0].address;
 
 const service = {
    info: function(){
@@ -66,14 +66,27 @@ const service = {
       const data = await contract.methods.transfer(to, amount).send({from: process.env.OWNER_ADDRESS})
       return data
    },
-   buy: async function(film, buyer, cluster, cinema, room, position, timestamp){
+   buy: async function(film, privateKey, cluster, cinema, room, position, timestamp){
       //Booking
-      const data = await contract.methods.buy(film, buyer, cluster, cinema, room, position, timestamp).send()
+      web3.eth.accounts.wallet.clear()
+      web3.eth.accounts.wallet.add(privateKey);
+      var tmpContract = new web3.eth.Contract(VND.abi, process.env.CONTRACT_ADDRESS, {from: web3.eth.accounts.wallet[0].address, gas: 3000000});
+      web3.eth.defaultAccount = web3.eth.accounts.wallet[0].address;
+
+      const data = await tmpContract.methods.buy(film, cluster, cinema, room, position, timestamp).send()
+
+      web3.eth.accounts.wallet.clear()
+      web3.eth.accounts.wallet.add(process.env.OWNER_PRIVATE_KEY)
+      web3.eth.defaultAccount = web3.eth.accounts.wallet[0].address;
       return data
    },
-   cancel: async function(film, buyer, cluster, cinema, room, position, timestamp){
+   cancel: async function(film, privateKey, cluster, cinema, room, position, timestamp){
       //Cancel booking
-      const data = await contract.methods.cancel(film, buyer, cluster, cinema, room, position, timestamp).send()
+      web3.eth.accounts.wallet.clear()
+      web3.eth.accounts.wallet.add(privateKey)
+      const data = await contract.methods.cancel(film, cluster, cinema, room, position, timestamp).send()
+      web3.eth.accounts.wallet.clear()
+      web3.eth.accounts.wallet.add(process.env.OWNER_PRIVATE_KEY)
       return data
    },
    chargeHistory: async function(owner){
